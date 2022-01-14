@@ -11,10 +11,13 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+from dotenv import dotenv_values
+
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('GjDx/h+uio27gbLf+SD5nWTa+FJAbXJFQps4Omj7ldvvw3gswqUTXapZ+oWd10P0JjbfU0w55YRsQzKGxMRh9j487nYGOs1V819U6OLEzVugAu5BSUweBCKxu0M7ayXRbbX6PGMbbGZWyxwAqACgQAdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('80d112842f6924a76d371c515adfeb32')
+config = dotenv_values(".env")
+line_bot_api = LineBotApi(config.LINEBOT)
+handler = WebhookHandler(config.SECRET)
 
 @app.route('/')
 def hello():
