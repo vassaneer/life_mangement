@@ -1,2 +1,4 @@
 /linebot
+/__pycache__
+test.py
 .env

@@ -14,6 +14,7 @@ from linebot.models import (
 from dotenv import load_dotenv
 import os
 from os.path import join, dirname
+from notion import notion
 
 app = Flask(__name__)
 
@@ -21,6 +22,11 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 line_bot_api = LineBotApi(os.environ.get("LINEBOT"))
 handler = WebhookHandler(os.environ.get("SECRET"))
+notionSecret = os.environ.get("NOTIONSECRET")
+notionDB = os.environ.get("NOTIONDB")
+
+notion = notion(notionSecret, notionDB)
+notion.taskToday()
 
 @app.route('/')
 def hello():
@@ -47,9 +53,13 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    res = ""
+    if event.message.text == "task":
+        res = notion.taskToday()
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=res))
 
 
 if __name__ == "__main__":
